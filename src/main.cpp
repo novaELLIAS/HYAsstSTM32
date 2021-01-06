@@ -18,7 +18,7 @@ Metro accidentMonitor = Metro(100);
 acceFunc Filter;
 
 void setup() {
-	// put your setup code here, to run once:
+	Filter.accelgyroSetUp();
 }
 
 void loop() {
