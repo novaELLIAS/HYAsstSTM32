@@ -17,17 +17,32 @@
 #include "LED_OUTPUT.h"
 
 void SystemClock_Config(void);
-int main(void) {
+void setupInit(void);
+void setupTest(void);
+void systemLoop(void);
+
+signed main(void) {
+	setupInit ();
+
+	setupTest ();
+
+	while (1) systemLoop();
+}
+
+inline void setupInit () {
 	HAL_Init();
 	SystemClock_Config();
 
 	LED_PC13_INIT();
 	LED_OUTPUT_INIT();
+}
 
+inline void setupTest () {
+	LED_OUTPUT_TEST();
+}
 
-	while (1) {
-		//LED_PC13_BLINK(1000);
-	}
+inline void systemLoop() {
+	HAL_Delay(1000);
 }
 
 void SystemClock_Config(void)

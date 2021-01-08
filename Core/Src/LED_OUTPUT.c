@@ -61,18 +61,37 @@ inline void LED_OUTPUT_INIT () {
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	LED_GPSRFS_OFF();
 
 	GPIO_InitStruct.Pin = GPIO_PIN_6;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	LED_DATUPD_OFF();
 
 	GPIO_InitStruct.Pin = GPIO_PIN_5;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	LED_ALERT_OFF();
+}
+
+inline void LED_OUTPUT_TEST () {
+	HAL_Delay(1000);
+
+	LED_GPSRFS_ON ();
+	LED_DATUPD_ON ();
+	LED_ALERT_ON  ();
+
+	HAL_Delay(1000);
+
+	LED_GPSRFS_OFF();
+	LED_DATUPD_OFF();
+	LED_ALERT_OFF ();
+
+	HAL_Delay(1000);
 }
 
 
