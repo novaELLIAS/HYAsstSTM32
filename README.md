@@ -2,6 +2,8 @@
 
 Code for `STM32F411CE`
 
+using [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
+
 ![LICENSE](https://img.shields.io/github/license/novaELLIAS/HYAsstSTM32)
 ![issues](https://img.shields.io/github/issues/novaELLIAS/HYAsstSTM32)
 ![top language](https://img.shields.io/github/languages/top/novaELLIAS/HYAsstSTM32)
