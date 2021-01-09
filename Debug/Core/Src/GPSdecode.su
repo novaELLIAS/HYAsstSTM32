@@ -1,0 +1,4 @@
+GPSdecode.c:12:5:NMEA_Comma_Pos	24	static
+GPSdecode.c:25:5:NMEA_Pow	24	static
+GPSdecode.c:37:5:NMEA_Str2num	48	static
+GPSdecode.c:68:6:NMEA_BDS_GPRMC_Analysis	56	static

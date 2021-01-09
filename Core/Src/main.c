@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include "LED_OUTPUT.h"
 #include "SerialUSART.h"
+#include "GPSdecode.h"
 
 I2C_HandleTypeDef hi2c1;
 
@@ -27,6 +28,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_USART1_UART_Init(void);
 
+// Serial output for Debug @ HUART1
 #ifdef __GNUC__
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
@@ -37,6 +39,19 @@ PUTCHAR_PROTOTYPE {
 	HAL_UART_Transmit((UART_HandleTypeDef *)&huart1, (uint8_t*)&ch, 1, 0xFFFF);
 	return ch;
 }
+
+static unsigned char gps_uart[1000];
+GPS_Data_TypeDef     GPSdata;
+GPSmessage           GPSmsg;
+
+void GPS_Read_Data (void) {
+    HAL_UART_Receive_IT (&huart2, gps_uart, 1000);
+    NMEA_BDS_GPRMC_Analysis (&GPSmsg, (int*) gps_uart);
+    GPSdata.Longitude=(float)((float)GPSmsg.longitude_bd/100000);
+    GPSdata.Latitude=(float)((float)GPSmsg.latitude_bd/100000);
+}
+
+#define SerialDebug
 
 signed main(void) {
 
@@ -55,8 +70,11 @@ signed main(void) {
 
 	LED_OUTPUT_TEST();
 
+	#ifdef SerialDebug
+		printf("initialization success.\n");
+	#endif
+
 	while (1) {
-		printf("FAQ\n");
 		HAL_Delay(1000);
 	}
 }
