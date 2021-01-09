@@ -73,7 +73,7 @@ main-build: HYAsstSTM32.elf secondary-outputs
 
 # Tool invocations
 HYAsstSTM32.elf: $(OBJS) $(USER_OBJS) D:\works\HYAsstSTM32\STM32F411CEUX_FLASH.ld
-	arm-none-eabi-g++ -o "HYAsstSTM32.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\works\HYAsstSTM32\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="HYAsstSTM32.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	arm-none-eabi-g++ -o "HYAsstSTM32.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\works\HYAsstSTM32\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="HYAsstSTM32.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

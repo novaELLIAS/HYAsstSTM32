@@ -8,11 +8,12 @@
   ******************************************************************************
   */
 
+#define SerialDebug
+#define SerialGPSdebug
 
 #include "main.h"
 #include <stdio.h>
 #include "LED_OUTPUT.h"
-#include "SerialUSART.h"
 #include "GPSdecode.h"
 
 I2C_HandleTypeDef hi2c1;
@@ -46,12 +47,21 @@ GPSmessage           GPSmsg;
 
 void GPS_Read_Data (void) {
     HAL_UART_Receive_IT (&huart2, gps_uart, 1000);
-    NMEA_BDS_GPRMC_Analysis (&GPSmsg, (int*) gps_uart);
-    GPSdata.Longitude=(float)((float)GPSmsg.longitude_bd/100000);
-    GPSdata.Latitude=(float)((float)GPSmsg.latitude_bd/100000);
+
+    #ifdef SerialGPSdebug
+    	printf("GPS debug session 1: %d, %d\r\n", (int)GPSmsg.latitude_bd, (int)GPSmsg.longitude_bd);
+	#endif
+
+    NMEA_BDS_GPRMC_Analysis (&GPSmsg, (uint8_t*) gps_uart);
+
+    #ifdef SerialGPSdebug
+    	printf("GPS debug session 2: %d, %d\r\n", (int)GPSmsg.latitude_bd, (int)GPSmsg.longitude_bd);
+	#endif
+
+    	GPSdata.Longitude = (float)((float)GPSmsg.longitude_bd / 100000);
+    GPSdata.Latitude  = (float)((float)GPSmsg.latitude_bd  / 100000);
 }
 
-#define SerialDebug
 
 signed main(void) {
 
@@ -65,17 +75,30 @@ signed main(void) {
 	MX_USART6_UART_Init();
 	MX_USART1_UART_Init();
 
+	HAL_UART_Receive_IT(&huart2, (uint8_t*)gps_uart, 1);
+
 	LED_OUTPUT_INIT();
 	LED_PC13_INIT();
 
 	LED_OUTPUT_TEST();
 
 	#ifdef SerialDebug
-		printf("initialization success.\n");
+		printf("initialization success.\r\n");
+		register float nnnnn = 114.514;
+		printf("\r\nFLOAT TEST\r\n%f\r\n", nnnnn);
+		nnnnn = 1919.810;
+		printf("%f\r\n\r\n", nnnnn);
 	#endif
 
 	while (1) {
-		HAL_Delay(1000);
+
+		GPS_Read_Data ();
+
+		#ifdef SerialDebug
+			printf("Longitude: %f, Latitude: %f.\r\n", GPSdata.Longitude, GPSdata.Latitude);
+		#endif
+
+		HAL_Delay(2000);
 	}
 }
 
@@ -193,7 +216,7 @@ static void MX_USART2_UART_Init(void) {
 
 	/* USER CODE END USART2_Init 1 */
 	huart2.Instance = USART2;
-	huart2.Init.BaudRate = 115200;
+	huart2.Init.BaudRate = 9600;
 	huart2.Init.WordLength = UART_WORDLENGTH_8B;
 	huart2.Init.StopBits = UART_STOPBITS_1;
 	huart2.Init.Parity = UART_PARITY_NONE;
@@ -275,7 +298,7 @@ void Error_Handler(void) {
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
-
+		LED_PC13_BLINK(1000);
 	}
 	/* USER CODE END Error_Handler_Debug */
 }

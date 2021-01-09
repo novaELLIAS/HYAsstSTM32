@@ -9,8 +9,8 @@
  * function: get the position of the number count x "," in gps_buff.
  */
 
-int NMEA_Comma_Pos (int *buf,uint8_t cx) {
-    int *p = buf;
+uint8_t NMEA_Comma_Pos (uint8_t *buf, uint8_t cx) {
+	uint8_t *p = buf;
     while(cx) {
         if(*buf=='*' || *buf<' ' || *buf>'z') return 0xFF;
         if(*buf == ',') {-- cx;} ++ buf;
@@ -22,10 +22,12 @@ int NMEA_Comma_Pos (int *buf,uint8_t cx) {
  * function: get "pow(m, n);"
  */
 
-int NMEA_Pow (int m, int n) {
-    int res = 1;
-    while (-- n) res *= m;
-    return res;
+uint32_t NMEA_Pow (uint8_t m, uint8_t n) {
+	uint32_t res = 1;
+	while (n) {
+		if (n&1) res *= m;
+		m *= m; n >>= 1;
+	} return res;
 }
 
 /**
@@ -34,30 +36,27 @@ int NMEA_Pow (int m, int n) {
  * input: "dx" is the position of the dot of the number
  */
 
-int NMEA_Str2num (int *buf, int *dx)
-{
-    int *p = buf;
-    int ires = 0,fres = 0;
-    int ilen = 0,flen = 0,i;
-    int mask = 0, res;
+int NMEA_Str2num (uint8_t *buf, uint8_t *dx) {
+	uint8_t *p = buf;
+	uint32_t ires = 0, fres = 0;
+    uint8_t  ilen = 0, flen = 0, i, mask = 0;
+    int res;
     while (1) {
     	if (*p=='-') {mask |= 0x02; ++ p;}
     	if (*p==','||*p=='*') break;
     	if (*p=='.') {mask |= 0x01; ++ p;}
-    	else if(*p>'9' || (*p<'0')) {ilen = flen = 0; break;}
+    	else if((*p>'9') || (*p<'0')) {ilen = flen = 0; break;}
         if (mask & 0x01) ++ flen;
         else {++ ilen;} ++ p;
     }
     if (mask & 0x02) ++ buf;
     for (i=0; i<ilen; ++ i) {
-        ires += NMEA_Pow(10, ilen-1-i) * (buf[i]^'0');
-    } if (flen > 5) flen = 5; *dx = flen;
+        ires += NMEA_Pow(10, ilen-i-1) * (buf[i]^'0');
+    } if (flen > 5) {flen = 5;} *dx = flen;
     for (i=0; i<flen; ++ i) {
-        fres += NMEA_Pow(10, flen-1-i) * (buf[ilen+1+i]^'0');
-    }
-    res = ires * NMEA_Pow(10, flen) + fres;
-    if(mask & 0x02) res = -res;
-    return res;
+        fres += NMEA_Pow(10, flen-i-1) * (buf[ilen+i+1]^'0');
+    } res = ires * NMEA_Pow(10, flen) + fres;
+    return (mask&0x02)? -res:res;
 }
 
 /**
@@ -65,11 +64,12 @@ int NMEA_Str2num (int *buf, int *dx)
  * function: decode NMEA message
  */
 
-void NMEA_BDS_GPRMC_Analysis (GPSmessage *gpsmsg, int *buf) {
-    int *p4,dx;
-    int posx, temp;
+void NMEA_BDS_GPRMC_Analysis (GPSmessage *gpsmsg, uint8_t *buf) {
+	uint8_t *p4, dx;
+	uint8_t posx;
+	uint32_t temp;
     float rs;
-    p4 = (int*)strstr((const char *)buf,"$GPRMC");
+    p4 = (uint8_t*)strstr((const char *)buf, "$GPRMC");
     posx = NMEA_Comma_Pos (p4, 3);
     if (posx != 0XFF) {
         temp = NMEA_Str2num (p4+posx, &dx);
