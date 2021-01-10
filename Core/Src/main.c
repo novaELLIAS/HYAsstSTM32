@@ -46,13 +46,16 @@ PUTCHAR_PROTOTYPE {
 
 // GPS decoder
 
-uint8_t gps_uart[1000];
+#define GPS_Delay_Time 1000
+uint8_t gps_init;
+uint8_t gps_uart[5000];
 nmea_slmsg    NMEAslmsg;
 nmea_utc_time NMEAutctime;
 nmea_msg      NMEAmsg;
 
 void GPS_decode (void) {
-	HAL_UART_Receive_IT(&huart2, (uint8_t*) gps_uart, sizeof(gps_uart));
+
+	HAL_UART_Receive(&huart2, gps_uart, sizeof(gps_uart), GPS_Delay_Time);
 
 	#ifdef SerialGPSdebug
 		//printf("USART data:\r\n%s\r\n", gps_uart);
@@ -75,12 +78,17 @@ void GPS_decode (void) {
 		#ifdef SerialDebug
 			printf("\r\n** GPS Serial Debug **\r\n");
 			printf("GPS status: %s, PDOT: %f\r\n", NMEAmsg.gpssta^2? "3D":"2D", (float)NMEAmsg.pdop/10);
+			printf("UTC time: %02d:%02d:%02d\r\n", NMEAmsg.utc.hour, NMEAmsg.utc.min, NMEAmsg.utc.sec);
 			printf("Lat: %.6f, Log: %.6f, Spd: %.6f\r\n", (float)NMEAmsg.latitude/100000, (float)NMEAmsg.longitude/100000, (float)NMEAmsg.speed/1000);
 		#endif
 
 		LED_GPSRFS_OFF();
-	}
+	} //memset (gps_uart, 0, sizeof (gps_uart));
 }
+
+#undef GPS_Delay_Time
+
+// main
 
 signed main(void) {
 
@@ -99,7 +107,7 @@ signed main(void) {
 
 	LED_OUTPUT_TEST();
 
-	HAL_UART_Receive_IT(&huart2, (uint8_t*)gps_uart, 1);
+	HAL_UART_Receive_IT(&huart2, &gps_init, 1);
 
 	#ifdef SerialDebugFloatTest
 		printf("initialization success.\r\n");
@@ -111,7 +119,7 @@ signed main(void) {
 
 	while (1) {
 		GPS_decode ();
-		HAL_Delay(5000);
+		//HAL_Delay(2000);
 	}
 }
 

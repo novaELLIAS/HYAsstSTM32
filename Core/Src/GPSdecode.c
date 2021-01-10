@@ -130,13 +130,13 @@ void NMEA_GPRMC_Analysis (nmea_msg *gpsx, u8 *buf) {
 	u32 temp;
 	float rs;
 	p1 = (u8*)strstr((const char *)buf, "$GPRMC");
-//	posx = NMEA_Comma_Pos(p1, 1);
-//	if (posx^0XFF) {
-//		temp = NMEA_StrToNum(p1+posx, &dx) / NMEA_Pow(10, dx);
-//		gpsx->utc.hour = temp/10000;
-//		gpsx->utc.min  = (temp/100)%100;
-//		gpsx->utc.sec  = temp%100;
-//	}
+	posx = NMEA_Comma_Pos(p1, 1);
+	if (posx^0XFF) {
+		temp = NMEA_StrToNum(p1+posx, &dx) / NMEA_Pow(10, dx);
+		gpsx->utc.hour = temp/10000;
+		gpsx->utc.min  = (temp/100)%100;
+		gpsx->utc.sec  = temp%100;
+	}
 	posx = NMEA_Comma_Pos(p1, 3);
 	if (posx^0XFF) {
 		temp = NMEA_StrToNum(p1+posx, &dx);

@@ -5,4 +5,4 @@ GPSdecode.c:48:6:NMEA_GPGSV_Analysis	32	static
 GPSdecode.c:86:6:NMEA_GPVTG_Analysis	24	static
 GPSdecode.c:96:6:NMEA_GPGGA_Analysis	24	static
 GPSdecode.c:108:6:NMEA_GPGSA_Analysis	24	static
-GPSdecode.c:127:6:NMEA_GPRMC_Analysis	48	static
+GPSdecode.c:127:6:NMEA_GPRMC_Analysis	56	static
