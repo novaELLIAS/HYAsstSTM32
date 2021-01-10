@@ -89,11 +89,30 @@ void NMEA_GPGGA_Analysis (nmea_msg *gpsx,u8 *buf) {
     u8 posx;
     p1 = (u8*)strstr((const char *)buf, "$GPGGA");
     posx = NMEA_Comma_Pos(p1, 6);
-    if (posx != 0XFF) gpsx->gpssta = NMEA_Str2num(p1+posx, &dx);
+    if (posx != 0XFF) gpsx->gpssta = NMEA_StrToNum(p1+posx, &dx);
     posx = NMEA_Comma_Pos(p1, 7);
-    if (posx != 0XFF) gpsx->posslnum = NMEA_Str2num(p1+posx, &dx);
+    if (posx != 0XFF) gpsx->posslnum = NMEA_StrToNum(p1+posx, &dx);
     posx = NMEA_Comma_Pos(p1, 9);
-    if (posx != 0XFF) gpsx->altitude = NMEA_Str2num(p1+posx, &dx);
+    if (posx != 0XFF) gpsx->altitude = NMEA_StrToNum(p1+posx, &dx);
+}
+
+void NMEA_GPGSA_Analysis (nmea_msg *gpsx, u8 *buf) {
+    u8 *p1, dx;
+    u8 posx, i;
+    p1 = (u8*)strstr((const char *)buf, "$GPGSA");
+    posx = NMEA_Comma_Pos(p1, 2);
+    if (posx != 0XFF) gpsx->fixmode = NMEA_StrToNum(p1+posx, &dx);
+    for (i=0; i<12; ++ i) {
+        posx = NMEA_Comma_Pos(p1, 3+i);
+        if (posx != 0XFF) gpsx->possl[i] = NMEA_StrToNum(p1+posx, &dx);
+        else break;
+    }
+    posx = NMEA_Comma_Pos(p1, 15);
+    if (posx != 0XFF) gpsx->pdop = NMEA_StrToNum(p1+posx, &dx);
+    posx = NMEA_Comma_Pos(p1, 16);
+    if (posx != 0XFF) gpsx->hdop = NMEA_StrToNum(p1+posx, &dx);
+    posx = NMEA_Comma_Pos(p1, 17);
+    if (posx != 0XFF) gpsx->vdop = NMEA_StrToNum(p1+posx, &dx);
 }
 
 

@@ -2,3 +2,5 @@ GPSdecode.c:6:5:NMEA_Comma_Pos	24	static
 GPSdecode.c:14:5:NMEA_Pow	24	static
 GPSdecode.c:22:5:NMEA_StrToNum	40	static
 GPSdecode.c:49:6:NMEA_GPGSV_Analysis	32	static
+GPSdecode.c:87:6:NMEA_GPGGA_Analysis	24	static
+GPSdecode.c:99:6:NMEA_GPGSA_Analysis	32	static

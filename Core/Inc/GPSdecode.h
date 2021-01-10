@@ -64,3 +64,5 @@ int NMEA_StrToNum (u8 *buf, u8*dx);
 void NMEA_GPGSV_Analysis (nmea_msg *gpsx, u8 *buf);
 
 void NMEA_GPGGA_Analysis (nmea_msg *gpsx,u8 *buf);
+
+void NMEA_GPGSA_Analysis (nmea_msg *gpsx, u8 *buf);
