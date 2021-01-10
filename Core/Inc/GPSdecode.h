@@ -57,12 +57,16 @@ typedef struct {
 
 u8  NMEA_Comma_Pos (u8 *buf, u8 cx);
 
-u32 NMEA_Pow (u8 a, u8 n);
+u32 NMEA_Pow (u32 a, u8 n);
 
 int NMEA_StrToNum (u8 *buf, u8*dx);
 
 void NMEA_GPGSV_Analysis (nmea_msg *gpsx, u8 *buf);
 
+void NMEA_GPVTG_Analysis(nmea_msg *gpsx,u8 *buf);
+
 void NMEA_GPGGA_Analysis (nmea_msg *gpsx,u8 *buf);
 
 void NMEA_GPGSA_Analysis (nmea_msg *gpsx, u8 *buf);
+
+void NMEA_GPRMC_Analysis (nmea_msg *gpsx, u8 *buf);
