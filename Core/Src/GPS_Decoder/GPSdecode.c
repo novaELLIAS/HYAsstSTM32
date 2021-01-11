@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "GPSdecode.h"
+#include "GPS_Decoder/GPSdecode.h"
 
 u8  NMEA_Comma_Pos (u8 *buf, u8 cx) {
 	u8 *p = buf;
@@ -166,3 +166,9 @@ void NMEA_GPRMC_Analysis (nmea_msg *gpsx, u8 *buf) {
 //	}
 }
 
+void NMEA_GPS_DATA_PHRASE (nmea_msg *gpsx, gps_data *gpst) {
+	gpst->latitude  = (float)gpsx->latitude /100000;
+	gpst->longitude = (float)gpsx->longitude/100000;
+	gpst->speed     = (float)gpsx->speed/1000;
+	gpst->pdop      = (float)gpsx->pdop/10;
+}

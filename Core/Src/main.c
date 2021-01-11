@@ -14,15 +14,10 @@
 
 #include "main.h"
 #include <stdio.h>
-#include <string.h>
-#include "LED_OUTPUT.h"
-#include "GPSdecode.h"
-
-I2C_HandleTypeDef hi2c1;
-
-UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart2;
-UART_HandleTypeDef huart6;
+#include "LED_Functions/LED_OUTPUT.h"
+#include "GPS_Decoder/GPSdecode.h"
+#include "SIM7020Commander/AT_Onenet_LWM2M.h"
+#include "MPU6050/MPU6050.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -52,6 +47,7 @@ uint8_t gps_uart[5000];
 nmea_slmsg    NMEAslmsg;
 nmea_utc_time NMEAutctime;
 nmea_msg      NMEAmsg;
+gps_data      NMEAdata;
 
 void GPS_decode (void) {
 
@@ -75,15 +71,17 @@ void GPS_decode (void) {
 		NMEA_GPVTG_Analysis (&NMEAmsg, (uint8_t*) gps_uart);
 		NMEA_GPRMC_Analysis (&NMEAmsg, (uint8_t*) gps_uart);
 
+		NMEA_GPS_DATA_PHRASE(&NMEAmsg, &NMEAdata);
+
 		#ifdef SerialDebug
 			printf("\r\n** GPS Serial Debug **\r\n");
-			printf("GPS status: %s, PDOT: %f\r\n", NMEAmsg.gpssta^2? "3D":"2D", (float)NMEAmsg.pdop/10);
+			printf("GPS status: %s, PDOT: %f\r\n", NMEAmsg.gpssta^2? "3D":"2D", NMEAdata.pdop);
 			printf("UTC time: %02d:%02d:%02d\r\n", NMEAmsg.utc.hour, NMEAmsg.utc.min, NMEAmsg.utc.sec);
-			printf("Lat: %.6f, Log: %.6f, Spd: %.6f\r\n", (float)NMEAmsg.latitude/100000, (float)NMEAmsg.longitude/100000, (float)NMEAmsg.speed/1000);
+			printf("Lat: %.6f, Log: %.6f, Spd: %.6f\r\n", NMEAdata.latitude, NMEAdata.longitude, NMEAdata.speed);
 		#endif
 
 		LED_GPSRFS_OFF();
-	} //memset (gps_uart, 0, sizeof (gps_uart));
+	}
 }
 
 #undef GPS_Delay_Time
@@ -102,6 +100,8 @@ signed main(void) {
 	MX_USART6_UART_Init();
 	MX_USART1_UART_Init();
 
+	MPU_Init();
+
 	LED_OUTPUT_INIT();
 	LED_PC13_INIT();
 
@@ -118,7 +118,10 @@ signed main(void) {
 	#endif
 
 	while (1) {
-		GPS_decode ();
+		short x, y, z;
+		MPU_Get_Gyroscope(&x, &y, &z);
+		printf("x=%4d, y=%4d,z=%4d\r\n", x, y, z);
+		//GPS_decode ();
 		//HAL_Delay(2000);
 	}
 }
@@ -128,11 +131,11 @@ signed main(void) {
   * @retval None
   */
 void SystemClock_Config(void) {
-	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 	RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
 	/** Configure the main internal regulator output voltage
-    */
+	*/
 	__HAL_RCC_PWR_CLK_ENABLE();
 	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 	/** Initializes the RCC Oscillators according to the specified parameters
@@ -148,7 +151,7 @@ void SystemClock_Config(void) {
 	/** Initializes the CPU, AHB and APB buses clocks
 	*/
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-								 |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+															|RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -160,10 +163,10 @@ void SystemClock_Config(void) {
 }
 
 /**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
+	* @brief I2C1 Initialization Function
+	* @param None
+	* @retval None
+	*/
 static void MX_I2C1_Init(void) {
 
 	/* USER CODE BEGIN I2C1_Init 0 */
@@ -174,7 +177,7 @@ static void MX_I2C1_Init(void) {
 
 	/* USER CODE END I2C1_Init 1 */
 	hi2c1.Instance = I2C1;
-	hi2c1.Init.ClockSpeed = 100000;
+	hi2c1.Init.ClockSpeed = 400000;
 	hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
 	hi2c1.Init.OwnAddress1 = 0;
 	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -192,10 +195,10 @@ static void MX_I2C1_Init(void) {
 }
 
 /**
-  * @brief USART1 Initialization Function
-  * @param None
-  * @retval None
-  */
+	* @brief USART1 Initialization Function
+	* @param None
+	* @retval None
+	*/
 static void MX_USART1_UART_Init(void) {
 
 	/* USER CODE BEGIN USART1_Init 0 */
@@ -213,7 +216,8 @@ static void MX_USART1_UART_Init(void) {
 	huart1.Init.Mode = UART_MODE_TX_RX;
 	huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
 	huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-	if (HAL_UART_Init(&huart1) != HAL_OK) {
+	if (HAL_UART_Init(&huart1) != HAL_OK)
+	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN USART1_Init 2 */
@@ -223,10 +227,10 @@ static void MX_USART1_UART_Init(void) {
 }
 
 /**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
+	* @brief USART2 Initialization Function
+	* @param None
+	* @retval None
+	*/
 static void MX_USART2_UART_Init(void) {
 
 	/* USER CODE BEGIN USART2_Init 0 */
@@ -254,10 +258,10 @@ static void MX_USART2_UART_Init(void) {
 }
 
 /**
-  * @brief USART6 Initialization Function
-  * @param None
-  * @retval None
-  */
+	* @brief USART6 Initialization Function
+	* @param None
+	* @retval None
+	*/
 static void MX_USART6_UART_Init(void) {
 
 	/* USER CODE BEGIN USART6_Init 0 */
@@ -285,24 +289,15 @@ static void MX_USART6_UART_Init(void) {
 }
 
 /**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
+	* @brief GPIO Initialization Function
+	* @param None
+	* @retval None
+	*/
 static void MX_GPIO_Init(void) {
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 	/* GPIO Ports Clock Enable */
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-
-	/*Configure GPIO pin : PA15 */
-	GPIO_InitStruct.Pin = GPIO_PIN_15;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
-	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
@@ -311,32 +306,31 @@ static void MX_GPIO_Init(void) {
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+	* @brief	This function is executed in case of error occurrence.
+	* @retval None
+	*/
 void Error_Handler(void) {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
 		LED_PC13_BLINK(1000);
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef	USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	* @brief	Reports the name of the source file and the source line number
+	*				 where the assert_param error has occurred.
+	* @param	file: pointer to the source file name
+	* @param	line: assert_param error line source number
+	* @retval None
+	*/
+void assert_failed(uint8_t *file, uint32_t line) {
+	/* USER CODE BEGIN 6 */
+	/* User can add his own implementation to report the file name and line number,
+	   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

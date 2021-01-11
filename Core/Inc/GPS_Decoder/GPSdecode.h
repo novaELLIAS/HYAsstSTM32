@@ -55,6 +55,13 @@ typedef struct {
     u16 speed;                 //Speed * 1000
 } __attribute__((packed)) nmea_msg;
 
+typedef struct {
+	float latitude;
+	float longitude;
+	float speed;
+	float pdop;
+} __attribute__((packed)) gps_data;
+
 u8  NMEA_Comma_Pos (u8 *buf, u8 cx);
 
 u32 NMEA_Pow (u32 a, u8 n);
@@ -70,3 +77,5 @@ void NMEA_GPGGA_Analysis (nmea_msg *gpsx,u8 *buf);
 void NMEA_GPGSA_Analysis (nmea_msg *gpsx, u8 *buf);
 
 void NMEA_GPRMC_Analysis (nmea_msg *gpsx, u8 *buf);
+
+void NMEA_GPS_DATA_PHRASE (nmea_msg *gpsx, gps_data *gpst);

@@ -1,5 +1,6 @@
-Core/Src/LED_OUTPUT.o: ../Core/Src/LED_OUTPUT.c ../Core/Inc/LED_OUTPUT.h \
- ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+Core/Src/MPU6050/MPU6050.o: ../Core/Src/MPU6050/MPU6050.c \
+ ../Core/Inc/MPU6050/MPU6050.h ../Core/Inc/main.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -28,7 +29,7 @@ Core/Src/LED_OUTPUT.o: ../Core/Src/LED_OUTPUT.c ../Core/Inc/LED_OUTPUT.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
-../Core/Inc/LED_OUTPUT.h:
+../Core/Inc/MPU6050/MPU6050.h:
 
 ../Core/Inc/main.h:
 
