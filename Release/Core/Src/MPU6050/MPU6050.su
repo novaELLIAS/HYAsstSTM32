@@ -1,0 +1,12 @@
+MPU6050.c:85:4:MPU_Write_Len	24	static
+MPU6050.c:91:4:MPU_Read_Len	24	static
+MPU6050.c:54:7:MPU_Get_Temperature	16	static
+MPU6050.c:65:4:MPU_Get_Gyroscope	24	static
+MPU6050.c:75:4:MPU_Get_Accelerometer	24	static
+MPU6050.c:97:4:MPU_Write_Byte	32	static
+MPU6050.c:26:4:MPU_Set_Gyro_Fsr	0	static
+MPU6050.c:30:4:MPU_Set_Accel_Fsr	0	static
+MPU6050.c:34:4:MPU_Set_LPF	0	static
+MPU6050.c:45:4:MPU_Set_Rate	8	static
+MPU6050.c:104:4:MPU_Read_Byte	32	static
+MPU6050.c:4:4:MPU_Init	8	static

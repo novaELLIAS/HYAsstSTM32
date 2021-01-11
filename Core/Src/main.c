@@ -16,8 +16,9 @@
 #include <stdio.h>
 #include "LED_Functions/LED_OUTPUT.h"
 #include "GPS_Decoder/GPSdecode.h"
-#include "SIM7020Commander/AT_Onenet_LWM2M.h"
+//#include "SIM7020Commander/AT_Onenet_LWM2M.h"
 #include "MPU6050/MPU6050.h"
+#include "MPU6050/Kalman.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -42,8 +43,8 @@ PUTCHAR_PROTOTYPE {
 // GPS decoder
 
 #define GPS_Delay_Time 1000
-uint8_t gps_init;
-uint8_t gps_uart[5000];
+uint8_t       gps_init;
+uint8_t       gps_uart[5000];
 nmea_slmsg    NMEAslmsg;
 nmea_utc_time NMEAutctime;
 nmea_msg      NMEAmsg;
@@ -118,11 +119,7 @@ signed main(void) {
 	#endif
 
 	while (1) {
-		short x, y, z;
-		MPU_Get_Gyroscope(&x, &y, &z);
-		printf("x=%4d, y=%4d,z=%4d\r\n", x, y, z);
 		//GPS_decode ();
-		//HAL_Delay(2000);
 	}
 }
 
