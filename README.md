@@ -1,6 +1,6 @@
 # HYAsstHardwareSTM32
 
-Code for `STM32F411CE` using [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
+Code for `STM32F411CE` using `STM32Cube` framework.
 
 ![LICENSE](https://img.shields.io/github/license/novaELLIAS/HYAsstSTM32)
 ![issues](https://img.shields.io/github/issues/novaELLIAS/HYAsstSTM32)
