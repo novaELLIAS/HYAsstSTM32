@@ -1,5 +1,6 @@
 "Core/Src/GPS_Decoder/GPSdecode.o"
 "Core/Src/LED_Functions/LED_OUTPUT.o"
+"Core/Src/MPU6050/Accident_Alert.o"
 "Core/Src/MPU6050/Kalman.o"
 "Core/Src/MPU6050/MPU6050.o"
 "Core/Src/SIM7020Commander/AT.o"

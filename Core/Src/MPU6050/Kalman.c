@@ -20,15 +20,9 @@ long long aax_sum, aay_sum,aaz_sum;
 double a_x[10]={0}, a_y[10]={0}, a_z[10]={0}, g_x[10]={0}, g_y[10]={0}, g_z[10]={0};
 double Px=1, Rx, Kx, Sx, Vx, Qx, Py=1, Ry, Ky, Sy, Vy, Qy, Pz=1, Rz, Kz, Sz, Vz, Qz;
 
-#define durVal 500
-double tmpAgx[durVal], tmpAgy[durVal], tmpAgz[durVal];
-int pos, totx, toty, totz;
-double avgx, avgy, avgz;
-#undef durVal
-
 #define sq(x) ((x)*(x))
 
-void getAccelgyroData(double *tagX, double *tagY, double *tagZ) {
+void getAccelgyroData(double *tagX, double *tagY, double *tagZ, double *Acc) {
 	unsigned long now = HAL_GetTick();
 	dt = (now - lastTime) / 1000.0;
 	lastTime = now;
@@ -37,6 +31,8 @@ void getAccelgyroData(double *tagX, double *tagY, double *tagZ) {
 	MPU_Get_Accelerometer(&ax, &ay, &az);
 
 	accx = ax / AcceRatio, accy = ay / AcceRatio, accz = az / AcceRatio;
+
+	*Acc = sqrt(sq(accx) + sq(accy) + sq(accz));
 
 	aax = atan(accy / accz) * (-180) / pi;
 	aay = atan(accx / accz) * 180 / pi;
@@ -75,4 +71,5 @@ void getAccelgyroData(double *tagX, double *tagY, double *tagZ) {
 	Py = Py + 0.0025, Ky = Py / (Py + Ry), agy = agy + Ky * (aay - agy), Py = (1 - Ky) * Py;
 	Pz = Pz + 0.0025, Kz = Pz / (Pz + Rz), agz = agz + Kz * (aaz - agz), Pz = (1 - Kz) * Pz;
 
+	*tagX = agx, *tagY = agy, *tagZ = agz;
 }

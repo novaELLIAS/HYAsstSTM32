@@ -1,0 +1,3 @@
+Accident_Alert.c:11:6:accidentMonitorSetup	8	static
+Accident_Alert.c:13:8:Abs	24	static
+Accident_Alert.c:23:5:accidentJudge	24	static

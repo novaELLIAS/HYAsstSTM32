@@ -16,9 +16,7 @@
 #include <stdio.h>
 #include "LED_Functions/LED_OUTPUT.h"
 #include "GPS_Decoder/GPSdecode.h"
-//#include "SIM7020Commander/AT_Onenet_LWM2M.h"
-#include "MPU6050/MPU6050.h"
-#include "MPU6050/Kalman.h"
+#include "MPU6050/Accident_Alert.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -101,7 +99,7 @@ signed main(void) {
 	MX_USART6_UART_Init();
 	MX_USART1_UART_Init();
 
-	MPU_Init();
+	accidentMonitorSetup();
 
 	LED_OUTPUT_INIT();
 	LED_PC13_INIT();
@@ -119,7 +117,6 @@ signed main(void) {
 	#endif
 
 	while (1) {
-		//GPS_decode ();
 	}
 }
 
