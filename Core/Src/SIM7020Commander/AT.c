@@ -6,7 +6,7 @@
 
 struct tok tok;
 
-struct at_cmd_handld_t at_cmd_hanld[] = {
+struct at_cmd_hanld_t at_cmd_hanld[] = {
 	 {"AT+CFUN", AT_Send ,AT_Return},
 
 	 {"AT+CPIN", AT_Send ,AT_Return},
@@ -29,10 +29,62 @@ struct at_cmd_handld_t at_cmd_hanld[] = {
 	 {NULL, NULL , NULL}
 };
 
+char Buff[2048];
+int SIM7020_state = LNW_INIT;
+uint8_t ReceiveFinish;
+uint8_t ReceiveFlag;
+uint8_t ConnectFlag = 0;
+uint16_t Buffsiez;
+uint16_t Timout;
+
+void CMD_Send(char *buff, char *atcmd, struct tok *tok) {
+	int i = 0; char temp[64];
+	sprintf (buff, "%s", atcmd);
+	if (tok->num != 0) {
+		for (i=0; i<tok->num; i++) {
+			if(i == 0 && tok->sendstr[i][0] == '?') {
+				sprintf(temp,"%s",tok->sendstr[i]);
+				strcat(buff,temp);
+			} else if(i == 0 && tok->sendstr[i][0] != '?') {
+				sprintf(temp,"=%s",tok->sendstr[i]);
+				strcat(buff,temp);
+			} else {
+				sprintf(temp,",%s",tok->sendstr[i]);
+				strcat(buff,temp);
+			}
+		}
+	} strcat(buff,"\r\n");
+}
+
 int AT_Send(char *atcmd, struct tok *tok) {
-	return 1;
+	int i; char buff[256];
+	for(i=0; i<Retime; ++ i) {
+		CMD_Send(buff, atcmd, tok);
+		HAL_UART_Transmit_IT(&huart6, (uint8_t*)buff, strlen(buff));
+		if(!AT_Return(tok->ret)) {return 0;}
+	} return 1;
 }
 
 int AT_Return(char *str) {
-	return 1;
+	uint32_t Time_count = 0;
+	Time_count = Timeout;
+	while(Time_count --) {
+	 	if(ReceiveFinish) {
+			ReceiveFinish = 0; Buffsiez = 0;
+			if(strstr((const char *)Buff,str)!=NULL) {return 0;}
+		} HAL_Delay(1);
+	} return 1;
+}
+
+int AT_CMD_Dispose(struct tok *tok) {
+	struct at_cmd_hanld_t *atcmd, *match = NULL;
+	char name[32];
+	atcmd = at_cmd_hanld;
+	stringCapitalize(name, tok->name);
+	while(atcmd->atcmd) {
+		if(strcmp(atcmd->atcmd,name) == 0) {
+			match = atcmd; break;
+		} atcmd ++;
+  } if(match) return match->send_hanld(match->atcmd,tok);
+  else {return 1;}
 }
