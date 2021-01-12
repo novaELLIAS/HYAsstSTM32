@@ -99,12 +99,16 @@ signed main(void) {
 	MX_USART6_UART_Init();
 	MX_USART1_UART_Init();
 
+	//printf("TEST\r\n");
+
 	accidentMonitorSetup();
 
 	LED_OUTPUT_INIT();
 	LED_PC13_INIT();
 
 	LED_OUTPUT_TEST();
+
+	//printf ("test\r\n");
 
 	HAL_UART_Receive_IT(&huart2, &gps_init, 1);
 
@@ -117,6 +121,8 @@ signed main(void) {
 	#endif
 
 	while (1) {
+		HAL_Delay(1000);
+		//GPS_decode ();
 	}
 }
 
