@@ -88,3 +88,10 @@ int AT_CMD_Dispose(struct tok *tok) {
   } if(match) return match->send_hanld(match->atcmd,tok);
   else {return 1;}
 }
+
+void Buff_clear(struct tok *tok) {
+	tok->num = 0;
+	memset(tok->sendstr, 0, sizeof(tok->sendstr));
+	memset(tok->ret, 0, sizeof(tok->ret));
+	memset(Buff, 0, sizeof(Buff));
+}

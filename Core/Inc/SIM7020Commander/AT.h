@@ -34,3 +34,4 @@ int AT_Return(char *str);
 
 int AT_CMD_Dispose(struct tok *tok);
 
+void Buff_clear(struct tok *tok);
