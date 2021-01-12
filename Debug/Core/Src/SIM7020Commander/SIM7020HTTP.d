@@ -1,4 +1,6 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/SIM7020Commander/SIM7020HTTP.o: \
+ ../Core/Src/SIM7020Commander/SIM7020HTTP.c \
+ ../Core/Inc/SIM7020Commander/SIM7020HTTP.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -26,10 +28,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/LED_Functions/LED_OUTPUT.h \
- ../Core/Inc/GPS_Decoder/GPSdecode.h ../Core/Inc/MPU6050/Accident_Alert.h \
- ../Core/Inc/SIM7020Commander/SIM7020HTTP.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+
+../Core/Inc/SIM7020Commander/SIM7020HTTP.h:
 
 ../Core/Inc/main.h:
 
@@ -88,11 +89,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-
-../Core/Inc/LED_Functions/LED_OUTPUT.h:
-
-../Core/Inc/GPS_Decoder/GPSdecode.h:
-
-../Core/Inc/MPU6050/Accident_Alert.h:
-
-../Core/Inc/SIM7020Commander/SIM7020HTTP.h:

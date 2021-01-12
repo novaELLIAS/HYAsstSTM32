@@ -3,6 +3,7 @@
 "Core/Src/MPU6050/Accident_Alert.o"
 "Core/Src/MPU6050/Kalman.o"
 "Core/Src/MPU6050/MPU6050.o"
+"Core/Src/SIM7020Commander/SIM7020HTTP.o"
 "Core/Src/main.o"
 "Core/Src/stm32f4xx_hal_msp.o"
 "Core/Src/stm32f4xx_it.o"

@@ -1,0 +1,3 @@
+SIM7020HTTP.c:22:6:intToString	24	static
+SIM7020HTTP.c:34:6:strToHex	40	static
+SIM7020HTTP.c:46:6:HTTP_Send_Data	64	static

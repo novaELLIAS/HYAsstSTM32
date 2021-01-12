@@ -3,6 +3,10 @@
 #include <string.h>
 #include "GPS_Decoder/GPSdecode.h"
 
+typedef uint8_t   u8;
+typedef uint16_t  u16;
+typedef uint32_t  u32;
+
 u8  NMEA_Comma_Pos (u8 *buf, u8 cx) {
 	u8 *p = buf;
 	while (cx) {

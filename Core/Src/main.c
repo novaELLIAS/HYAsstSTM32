@@ -17,6 +17,7 @@
 #include "LED_Functions/LED_OUTPUT.h"
 #include "GPS_Decoder/GPSdecode.h"
 #include "MPU6050/Accident_Alert.h"
+#include "SIM7020Commander/SIM7020HTTP.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -99,16 +100,12 @@ signed main(void) {
 	MX_USART6_UART_Init();
 	MX_USART1_UART_Init();
 
-	//printf("TEST\r\n");
-
 	accidentMonitorSetup();
 
 	LED_OUTPUT_INIT();
 	LED_PC13_INIT();
 
 	LED_OUTPUT_TEST();
-
-	//printf ("test\r\n");
 
 	HAL_UART_Receive_IT(&huart2, &gps_init, 1);
 
@@ -121,8 +118,8 @@ signed main(void) {
 	#endif
 
 	while (1) {
-		HAL_Delay(1000);
-		//GPS_decode ();
+		GPS_decode ();
+		HTTP_Send_Data(NMEAdata.latitude, NMEAdata.longitude, NMEAdata.speed, 0);
 	}
 }
 
