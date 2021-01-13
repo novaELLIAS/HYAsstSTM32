@@ -19,7 +19,7 @@ struct at_cmd_hanld_t {
 	int (*return_hanld) (char *str);
 };
 
-#define Timeout             5000
+#define Timeout             10
 #define Retime              2
 
 #define LNW_INIT            0

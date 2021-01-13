@@ -66,11 +66,12 @@ int AT_Send(char *atcmd, struct tok *tok) {
 }
 
 int AT_Return(char *str) {
-	uint32_t Time_count = 0;
+	uint32_t Time_count = 2;
 	Time_count = Timeout;
 	memset(Buff, 0, sizeof Buff);
 	while(Time_count --) {
 		HAL_UART_Receive(&huart6, (uint8_t *)Buff, sizeof Buff, 100);
+		printf("AT_Return: %s\r\n", Buff);
 		if(strstr((const char *)Buff,str)!=NULL) {return 0;}
 		HAL_Delay(1);
 	} return 1;
@@ -82,11 +83,11 @@ int AT_CMD_Dispose(struct tok *tok) {
 	atcmd = at_cmd_hanld;
 	stringCapitalize(name, tok->name);
 	while(atcmd->atcmd) {
-		if(strcmp(atcmd->atcmd,name) == 0) {
+		if(strcmp(atcmd->atcmd, name) == 0) {
 			match = atcmd; break;
 		} atcmd ++;
-  } if(match) return match->send_hanld(match->atcmd,tok);
-  else {return 1;}
+	} if(match) return match->send_hanld(match->atcmd, tok);
+	else {return 1;}
 }
 
 void Buff_clear(struct tok *tok) {

@@ -46,14 +46,16 @@ int Registered_Plant(void) {
 	tok.num = 2;
 	strcpy(tok.sendstr[0],"0");
 	strcpy(tok.sendstr[1],"180");
-	strcpy(tok.ret,"+MIPLEVENT: 0,6");
+	//strcpy(tok.ret,"+MIPLEVENT: 0,6");
+	strcpy(tok.ret,"OK");
 	ret = AT_CMD_Dispose(&tok);
 	Buff_clear(&tok);
 	if(!ret) {
-		HAL_Delay(50000);
+		printf("Device Register success.\r\n");
+		HAL_Delay(5000);
 		Reply_Observe_Command();
 		Reply_Discover_Command();
-	} return ret;
+	} return printf("Device Register fail.\r\n"), ret;
 }
 
 int Reply_Observe_Command(void) {
@@ -170,6 +172,7 @@ int Reply_READ_Command(char *messag) {
 		strcpy(tok.sendstr[10],"0");
 		strcpy(tok.ret,"OK");
 		ret = AT_CMD_Dispose(&tok);
+		free(messag_len);
 		Buff_clear(&tok);
 	} return ret;
 }
@@ -210,9 +213,11 @@ void ONENET_LWM2M(void) {
 		case SET_LNW_PARAMETER:
 			LOGOUT_Device();
 			CLOSE_Server();
-			if(CONNECT_Server()) {return;}
+			if(CONNECT_Server()) {printf("CONNECT_Server Fail.\r\n"); return;}
+			printf("CONNECT_Server success.\r\n");
 			ADD_Object();
-			if(Registered_Plant()) {return;}
+			printf("ADD_Object aft.\r\n");
+			if(Registered_Plant()) {printf("Registered_Plant Fail.\r\n"); return;}
 			SIM7020_state = CONNECT_OK;
 			break;
 		case CONNECT_OK:
