@@ -20,12 +20,10 @@ uint8_t *ATmap[] = {
 char buf[2048], snd[2048], tmp[2048];
 
 void intToString(int n, char *str) {
-	uint8_t  i = 0;
-	int temp = n;
-	while((temp/=10)>0) {++ i;}
-	str[i] = '\0';
-	do {str[-- i] = n%10 + '0';}
-	while ((n/=10) > 0); return;
+	uint8_t  pos = 0;
+	while (n) {
+		str[pos ++] = n%10 + '0'; n/=10;
+	} str[pos] = '\0'; return;
 }
 
 int num[2048];
@@ -38,8 +36,8 @@ void strToHex (char *src, char *dst) {
 		tmp = src[i], top = 0;
 		while (tmp) {
 			num[top ++] =tmp % 16;
-			tmp /= 16;
-		} for (top=top-1; ~top; -- top) dst[++ pos] = hex[num[top]];
+			tmp >>= 4;
+		} for (top=top-1; top>=0; -- top) dst[pos ++] = hex[num[top]];
 	} dst[pos] = '\0';
 }
 
@@ -58,10 +56,27 @@ void HTTP_Send_Data (float lat, float log, float spd, int isAccident) {
 	strcat(snd, "\r\n\r\n");
 	strcat(snd, buf);
 
-	strcpy(buf, "AT+CSOSEND=0,0,");
+	printf("Period1 \r\n");
+
+	char hexlen[100] = "1096";
+	strcpy(buf, "AT+CSOSEND=0,");
 	strToHex(snd, tmp);
+
+	printf("Period2 %d \r\n", strlen(tmp));
+
+	int tmplen = strlen(tmp);
+
+	intToString(tmplen, hexlen);
+
+
+	printf("Period3 %s \r\n", hexlen);
+
+	strcat(buf, hexlen);
+	strcat(buf, ",");
 	strcat(buf, tmp);
 	strcat(buf, "\r\n");
+
+	printf("buf:\r\n%s\r\n", buf);
 
 	HAL_UART_Transmit_IT(&huart6, (uint8_t *) buf, sizeof(buf)); HAL_Delay(1000);
 
