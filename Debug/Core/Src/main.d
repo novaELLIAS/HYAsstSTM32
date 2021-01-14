@@ -28,7 +28,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/LED_Functions/LED_OUTPUT.h \
- ../Core/Inc/GPS_Decoder/GPSdecode.h ../Core/Inc/MPU6050/Accident_Alert.h
+ ../Core/Inc/GPS_Decoder/GPSdecode.h ../Core/Inc/MPU6050/Accident_Alert.h \
+ ../Core/Inc/MQTT/general_command.h ../Core/Inc/MQTT/MQTT.h
 
 ../Core/Inc/main.h:
 
@@ -93,3 +94,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/GPS_Decoder/GPSdecode.h:
 
 ../Core/Inc/MPU6050/Accident_Alert.h:
+
+../Core/Inc/MQTT/general_command.h:
+
+../Core/Inc/MQTT/MQTT.h:

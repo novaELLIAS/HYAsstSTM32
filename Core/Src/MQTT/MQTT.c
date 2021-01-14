@@ -12,7 +12,7 @@ extern int SIM7020_state;
 
 char ClientID[20] = "\"653000696\"";
 char UserNAME[20] = "387253";
-char Password[20] = "1096";
+char Password[20] = "10961096";
 char TOPIC[20]    = "\"test\"";
 
 char RemoteIP[20]    = "\"183.230.40.39\"";
@@ -34,6 +34,26 @@ int CONNECT_Server(void) {
 	return ret;
 }
 
+int Registered_Plant(void) {
+	int ret;
+	strcpy(tok.name,"AT+CMQCON");
+	tok.num = 8;
+	strcpy(tok.sendstr[0],"0");
+	strcpy(tok.sendstr[1],"4");
+	strcpy(tok.sendstr[2],ClientID);
+	strcpy(tok.sendstr[3],"180");
+	strcpy(tok.sendstr[4],"0");
+	strcpy(tok.sendstr[5],"0");
+	strcpy(tok.sendstr[6],UserNAME);
+	strcpy(tok.sendstr[7],Password);
+	strcpy(tok.ret,"OK");
+	ret = AT_CMD_Dispose(&tok);
+	Buff_clear(&tok);
+	if(ret) printf("Device Register Fail.\r\n");
+	else printf("Device Register Success.\r\n");
+	return ret;
+}
+
 int SUB_Topic(void) {
 	int ret;
 	strcpy(tok.name,"AT+CMQSUB");
@@ -49,11 +69,11 @@ int SUB_Topic(void) {
 	return ret;
 }
 
-int PUB_Messag(char *Messag)
-{
-  int ret;
+int PUB_Messag(char *Messag) {
+	int ret, len = strlen(Messag) - 2;
 	char Messag_len[5];
-	intToString(strlen(Messag)-2,(uint8_t*)Messag_len);
+	memset(Messag_len, 0, sizeof Messag_len);
+	intToString(len,(uint8_t*)Messag_len);
 	strcpy(tok.name,"AT+CMQPUB");
 	tok.num = 7;
 	strcpy(tok.sendstr[0],"0");
@@ -62,6 +82,7 @@ int PUB_Messag(char *Messag)
 	strcpy(tok.sendstr[3],"0");
 	strcpy(tok.sendstr[4],"0");
 	strcpy(tok.sendstr[5],Messag_len);
+	printf("Message_len: %send\r\n",Messag_len);
 	strcpy(tok.sendstr[6],Messag);
 	strcpy(tok.ret,"OK");
 	ret = AT_CMD_Dispose(&tok);
@@ -120,4 +141,21 @@ int Messag_Bispose(void) {
 		Messag_Analysis(Buff);
 		Buff_clear(&tok); return 0;
 	} return 1;
+}
+
+void ONENET_MQTT(void) {
+	switch(SIM7020_state) {
+		case LNW_INIT:
+			if(!lte_init()) SIM7020_state = SET_LNW_PARAMETER;
+			break;
+		case SET_LNW_PARAMETER:
+			Close_Server();
+			if(CONNECT_Server()) return;
+			if(Registered_Plant()) return;
+			if(SUB_Topic()) return;
+			SIM7020_state = CONNECT_OK;
+			break;
+		case CONNECT_OK:
+			/*if(!Messag_Bispose())*/ PUB_Messag("\"114514\"");
+	}
 }
