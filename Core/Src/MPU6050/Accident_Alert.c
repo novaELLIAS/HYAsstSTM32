@@ -30,7 +30,7 @@ int accidentJudge (gps_data *GPSdata) {
 	tmpAgx[pos] = agx, tmpAgy[pos]= agy, tmpAgz[pos] = agz;
 	totx += agx, toty += agy, totz += agz;
 	avgx = (double)totx/(1.0*durVal), avgy = (double)toty/(1.0*durVal), avgz = (double)totz/(1.0*durVal);
-	pos = (pos+1)%(durVal);
+	pos = (pos+1)%(durVal); if (GPSdata->speed <= ACCIDENT_ALERT_SPEED) flag = 0;
 	return flag;
 }
 

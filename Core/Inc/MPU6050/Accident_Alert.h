@@ -1,4 +1,4 @@
 
 void accidentMonitorSetup (void);
 
-int accidentJudge (void);
+int accidentJudge (gps_data *GPSdata);

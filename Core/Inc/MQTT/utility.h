@@ -12,3 +12,5 @@ int stringToInt (char *str);
 int getIntLen (int a);
 
 void stringCapitalize (char *dest, char *str);
+
+void strToHex (char *dst, char *src);

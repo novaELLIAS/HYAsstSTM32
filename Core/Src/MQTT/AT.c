@@ -46,7 +46,7 @@ int AT_CMD_Dispose(struct tok *tok) {
 }
 
 void CMD_Send(char *buff, char *atcmd, struct tok *tok) {
-	int i = 0; char temp[64];
+	int i = 0; char temp[256];
 	sprintf (buff, "%s", atcmd);
 	if (tok->num != 0) {
 		for (i=0; i<tok->num; i++) {

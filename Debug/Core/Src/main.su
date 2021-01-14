@@ -1,6 +1,6 @@
-main.c:40:1:__io_putchar	16	static
-main.c:56:6:GPS_decode	40	static
-main.c:95:8:main	8	static
+main.c:37:1:__io_putchar	16	static
+main.c:54:6:GPS_decode	40	static
+main.c:97:8:main	8	static
 main.c:143:6:SystemClock_Config	88	static
 main.c:180:13:MX_I2C1_Init	8	static
 main.c:212:13:MX_USART1_UART_Init	8	static

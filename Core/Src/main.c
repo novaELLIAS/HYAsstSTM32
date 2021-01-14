@@ -19,9 +19,6 @@
 #include "MPU6050/Accident_Alert.h"
 #include "MQTT/general_command.h"
 #include "MQTT/MQTT.h"
-//#include "SIM7020Commander/SIM7020HTTP.h"
-//#include "SIM7020Commander/General_Command.h"
-//#include "SIM7020Commander/AT_Onenet_LWM2M.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -46,12 +43,13 @@ PUTCHAR_PROTOTYPE {
 // GPS decoder
 
 #define GPS_Delay_Time 1000
-uint8_t       gps_init;
-uint8_t       gps_uart[5000];
-nmea_slmsg    NMEAslmsg;
-nmea_utc_time NMEAutctime;
-nmea_msg      NMEAmsg;
-gps_data      NMEAdata;
+uint8_t                gps_init;
+uint8_t                gps_uart[5000];
+nmea_slmsg             NMEAslmsg;
+nmea_utc_time          NMEAutctime;
+nmea_msg           	   NMEAmsg;
+gps_data               NMEAdata;
+dataPoints             DP;
 
 void GPS_decode (void) {
 
@@ -76,6 +74,10 @@ void GPS_decode (void) {
 		NMEA_GPRMC_Analysis (&NMEAmsg, (uint8_t*) gps_uart);
 
 		NMEA_GPS_DATA_PHRASE(&NMEAmsg, &NMEAdata);
+
+		DP.latitude  = NMEAdata.latitude;
+		DP.longitude = NMEAdata.longitude;
+		DP.speed     = NMEAdata.speed;
 
 		#ifdef SerialDebug
 			printf("\r\n** GPS Serial Debug **\r\n");
@@ -128,11 +130,9 @@ signed main(void) {
 	} LED_DATUPD_OFF(); printf("Signal Success.\r\n");
 
 	while (1) {
-		ONENET_MQTT();
-		//ONENET_LWM2M();
-		//GPS_decode ();
-		//HTTP_Send_Data(NMEAdata.latitude, NMEAdata.longitude, NMEAdata.speed, 0);
-		HAL_Delay(2000);
+		GPS_decode();
+		DP.flag = accidentJudge(&NMEAdata);
+		ONENET_MQTT(&DP);
 	}
 }
 

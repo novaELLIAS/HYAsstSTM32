@@ -13,10 +13,12 @@ extern int SIM7020_state;
 char ClientID[20] = "\"653000696\"";
 char UserNAME[20] = "387253";
 char Password[20] = "10961096";
-char TOPIC[20]    = "\"test\"";
+char TOPIC[20]    = "\"$dp\"";
 
 char RemoteIP[20]    = "\"183.230.40.39\"";
 char RemotePort[6]   = "6002";
+
+char hexToSend[256], strToSend[256];
 
 int CONNECT_Server(void) {
 	int ret;
@@ -83,9 +85,11 @@ int PUB_Messag(char *Messag) {
 	strcpy(tok.sendstr[4],"0");
 	strcpy(tok.sendstr[5],Messag_len);
 	printf("Message_len: %send\r\n",Messag_len);
-	strcpy(tok.sendstr[6],Messag);
+	strcpy(tok.sendstr[6],strToSend);
+	printf("Message_TEST1\r\n");
 	strcpy(tok.ret,"OK");
 	ret = AT_CMD_Dispose(&tok);
+	printf("Message_TEST2\r\n");
 	Buff_clear(&tok);
 	if(ret) printf("Message PUB Fail.\r\n");
 	else printf("Message PUB Success.\r\n");
@@ -119,6 +123,19 @@ int Close_Server(void) {
 	return ret;
 }
 
+int HEX_Mode_Enable(void) {
+	int ret;
+	strcpy(tok.name,"AT+CREVHEX");
+	tok.num = 1;
+	strcpy(tok.sendstr[0],"1");
+	strcpy(tok.ret,"OK");
+	ret = AT_CMD_Dispose(&tok);
+	Buff_clear(&tok);
+	if(ret) printf("HEX mode Fail.\r\n");
+	else printf("HEX mode Success.\r\n");
+	return ret;
+}
+
 void Messag_Analysis(char *buff) {
 	char *str1;
 	char *str2;
@@ -143,7 +160,18 @@ int Messag_Bispose(void) {
 	} return 1;
 }
 
-void ONENET_MQTT(void) {
+void Messag_Builder (dataPoints *DP) {
+	sprintf(strToSend, "{\"La\":\"%.6f\",\"Lo\":\"%.6f\",\"S\":\"%.2f\",\"F\":\"%d\"}", DP->latitude, DP->longitude, DP->speed, DP->flag);
+	int len = strlen(strToSend);
+	printf("Messag_Builder 1: %s\r\n", strToSend);
+	strToHex(hexToSend, strToSend);
+	sprintf(strToSend, "\"03%04X", len);
+	strcat(strToSend, hexToSend);
+	strcat(strToSend, "\"");
+	printf("Messag_Builder 2: %s\r\n", strToSend);
+}
+
+void ONENET_MQTT(dataPoints *DP) {
 	switch(SIM7020_state) {
 		case LNW_INIT:
 			if(!lte_init()) SIM7020_state = SET_LNW_PARAMETER;
@@ -156,6 +184,8 @@ void ONENET_MQTT(void) {
 			SIM7020_state = CONNECT_OK;
 			break;
 		case CONNECT_OK:
-			/*if(!Messag_Bispose())*/ PUB_Messag("\"114514\"");
+			HEX_Mode_Enable();
+			Messag_Builder(DP);
+			PUB_Messag(strToSend);
 	}
 }

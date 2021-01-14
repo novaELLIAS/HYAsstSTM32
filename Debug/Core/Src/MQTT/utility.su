@@ -2,3 +2,4 @@ utility.c:6:6:intToString	24	static
 utility.c:13:5:stringToInt	24	static
 utility.c:22:5:getIntLen	24	static
 utility.c:28:6:stringCapitalize	24	static
+utility.c:39:6:strToHex	40	static

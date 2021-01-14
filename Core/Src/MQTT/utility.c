@@ -32,3 +32,18 @@ void stringCapitalize (char *dest, char *str) {
 		else dest[pos] = str[pos];
 	} dest[pos] = '\0';
 }
+
+int num[2048];
+const char hex[16]={'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+void strToHex (char *dst, char *src) {
+	int len = strlen(src), i, pos = 0, top = 0;
+	char tmp;
+	for (i=0; i<len; ++ i) {
+		tmp = src[i], top = 0;
+		while (tmp) {
+			num[top ++] = tmp % 16;
+			tmp >>= 4;
+		} for (top=top-1; top>=0; -- top) dst[pos ++] = hex[num[top]];
+	} dst[pos] = '\0';
+}

@@ -1,4 +1,4 @@
-Core/Src/MPU6050/Kalman.o: ../Core/Src/MPU6050/Kalman.cpp \
+Core/Src/MPU6050/Kalman.o: ../Core/Src/MPU6050/Kalman.c \
  ../Core/Inc/MPU6050/Kalman.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
