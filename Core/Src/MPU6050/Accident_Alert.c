@@ -3,6 +3,7 @@
 #include "MPU6050/Kalman.h"
 #include "MPU6050/MPU6050.h"
 #include "GPS_Decoder/GPSdecode.h"
+#include "LED_Functions/LED_OUTPUT.h"
 
 #define ACCIDENT_ACCE            2          //Minimal acceleration to trigger accident report
 #define ACCIDENT_ANGLE          90       	//Minimal dip angle to trigger accident report
@@ -31,6 +32,7 @@ int accidentJudge (gps_data *GPSdata) {
 	totx += agx, toty += agy, totz += agz;
 	avgx = (double)totx/(1.0*durVal), avgy = (double)toty/(1.0*durVal), avgz = (double)totz/(1.0*durVal);
 	pos = (pos+1)%(durVal); if (GPSdata->speed <= ACCIDENT_ALERT_SPEED) flag = 0;
+	if (flag) LED_ALERT_ON();
 	return flag;
 }
 

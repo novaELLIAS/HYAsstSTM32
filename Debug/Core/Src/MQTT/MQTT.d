@@ -28,7 +28,8 @@ Core/Src/MQTT/MQTT.o: ../Core/Src/MQTT/MQTT.c ../Core/Inc/MQTT/MQTT.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/MQTT/general_command.h ../Core/Inc/MQTT/at.h
+ ../Core/Inc/MQTT/general_command.h ../Core/Inc/MQTT/at.h \
+ ../Core/Inc/LED_Functions/LED_OUTPUT.h
 
 ../Core/Inc/MQTT/MQTT.h:
 
@@ -95,3 +96,5 @@ Core/Src/MQTT/MQTT.o: ../Core/Src/MQTT/MQTT.c ../Core/Inc/MQTT/MQTT.h \
 ../Core/Inc/MQTT/general_command.h:
 
 ../Core/Inc/MQTT/at.h:
+
+../Core/Inc/LED_Functions/LED_OUTPUT.h:
