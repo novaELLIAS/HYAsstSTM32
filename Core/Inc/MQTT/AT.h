@@ -16,7 +16,7 @@ struct tok {
 struct at_cmd_hanld_t {
 	char *atcmd;
 	int (*send_hanld)   (char *atcmd, struct tok *tok);
-	int (*return_hanld) (char *str);
+	int (*return_hanld) (char *str, int flag);
 };
 
 #define Timeout             10
@@ -26,12 +26,12 @@ struct at_cmd_hanld_t {
 #define SET_LNW_PARAMETER   1
 #define CONNECT_OK          2
 
+int AT_CMD_Dispose(struct tok *tok);
+
 void CMD_Send(char *buff, char *atcmd, struct tok *tok);
 
 int AT_Send(char *atcmd, struct tok *tok);
 
-int AT_Return(char *str);
-
-int AT_CMD_Dispose(struct tok *tok);
+int AT_Return(char *str, int flag);
 
 void Buff_clear(struct tok *tok);

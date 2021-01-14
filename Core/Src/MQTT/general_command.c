@@ -1,8 +1,10 @@
 
-#include "SIM7020Commander/General_Command.h"
-#include "SIM7020Commander/utility_basic.h"
-#include "SIM7020Commander/AT.h"
+#include "MQTT/general_command.h"
+#include "MQTT/AT.h"
+#include "MQTT/utility.h"
 #include <string.h>
+#include <stdio.h>
+#include "main.h"
 
 extern struct tok tok;
 extern char Buff[2048];
@@ -28,7 +30,6 @@ int Query_Signal_Quality(void) {
 	ret = AT_CMD_Dispose(&tok);
 	if(!ret) {
 		HAL_UART_Receive(&huart6, (uint8_t *)Buff, sizeof Buff, 100);
-		//printf("Query_Signal_Quality::Buff: \r\n%s\r\n", Buff);
 		temp = strstr((const char *)Buff,"+CSQ:"); temp += 6;
 		while(*temp!=0x2C) {signal[i] = *temp; temp++; i++; signal[i] = '\0';}
 		printf("Query_Signal_Quality::Signal: \r\n%s\r\n", signal);
@@ -38,14 +39,17 @@ int Query_Signal_Quality(void) {
 }
 
 int Read_SIM_Card(void) {
-	int ret;
 	strcpy(tok.name,"AT+CPIN");
 	tok.num = 1;
 	strcpy(tok.sendstr[0],"?");
-	strcpy(tok.ret,"+CPIN: READY");
-	ret = AT_CMD_Dispose(&tok);
-	Buff_clear(&tok);
-	return ret;
+	strcpy(tok.ret,"OK\r\n");
+	if(!AT_CMD_Dispose(&tok)) {
+		if(!AT_Return("+CPIN: READY", 1)) {printf("SIM Ready.\r\n");}
+		Buff_clear(&tok); return 0;
+	} else {
+		printf("Read_SIM_Card Fail.\r\n");
+		Buff_clear(&tok); return 1;
+	}
 }
 
 int GET_LNW_State(void) {
@@ -53,10 +57,23 @@ int GET_LNW_State(void) {
 	strcpy(tok.name,"AT+CEREG");
 	tok.num = 1;
 	strcpy(tok.sendstr[0],"?");
-	strcpy(tok.ret,"+CEREG: 0,1");
+	strcpy(tok.ret,"OK");
 	ret = AT_CMD_Dispose(&tok);
-	Buff_clear(&tok);
-	return ret;
+	if(!ret) {
+		if(!AT_Return("+CEREG: 0,0", 1)) {
+			ret = 1; printf("Network_unregistered.\r\n");
+		} else if(!AT_Return("+CEREG: 0,1", 0)) {
+			ret = 0; printf("Network_registered.\r\n");
+		} else if(!AT_Return("+CEREG: 0,2", 0)) {
+			ret = 1; printf("Network_Registering..\r\n");
+		} else if(!AT_Return("+CEREG: 0,3", 0)) {
+			ret = 1; printf("Network_Register_Fail.\r\n");
+		} else if(!AT_Return("+CEREG: 0,4", 0)) {
+			ret = 1; printf("Network_Register_UKE.\r\n");
+		} else if(!AT_Return("+CEREG: 0,4", 0)) {
+			ret = 0; printf("Network_roaming.\r\n");
+		}
+	} Buff_clear(&tok); return ret;
 }
 
 int GET_LNW_Adhere(void) {
@@ -65,10 +82,9 @@ int GET_LNW_Adhere(void) {
 	strcpy(tok.sendstr[0],"?");
 	strcpy(tok.ret,"+CGATT: 1\r\n");
 	if(AT_CMD_Dispose(&tok)) {
-		Buff_clear(&tok);
-		return 1;
-	} Buff_clear(&tok);
-	return 0;
+		printf("Network unattached.\r\n");
+		Buff_clear(&tok); return 1;
+	} Buff_clear(&tok); return 0;
 }
 
 int lte_init(void) {

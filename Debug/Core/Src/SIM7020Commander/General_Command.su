@@ -1,6 +1,0 @@
-General_Command.c:10:6:Restart_Module	8	static
-General_Command.c:21:5:Query_Signal_Quality	32	static
-General_Command.c:40:5:Read_SIM_Card	24	static
-General_Command.c:51:5:GET_LNW_State	24	static
-General_Command.c:62:5:GET_LNW_Adhere	16	static
-General_Command.c:74:5:lte_init	8	static

@@ -33,7 +33,7 @@ SUBDIRS := \
 Core/Src/GPS_Decoder \
 Core/Src/LED_Functions \
 Core/Src/MPU6050 \
-Core/Src/SIM7020Commander \
+Core/Src/MQTT \
 Core/Src \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \

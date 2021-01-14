@@ -10,7 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
--include Core/Src/SIM7020Commander/subdir.mk
+-include Core/Src/MQTT/subdir.mk
 -include Core/Src/MPU6050/subdir.mk
 -include Core/Src/LED_Functions/subdir.mk
 -include Core/Src/GPS_Decoder/subdir.mk

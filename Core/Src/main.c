@@ -18,8 +18,8 @@
 #include "GPS_Decoder/GPSdecode.h"
 #include "MPU6050/Accident_Alert.h"
 //#include "SIM7020Commander/SIM7020HTTP.h"
-#include "SIM7020Commander/General_Command.h"
-#include "SIM7020Commander/AT_Onenet_LWM2M.h"
+//#include "SIM7020Commander/General_Command.h"
+//#include "SIM7020Commander/AT_Onenet_LWM2M.h"
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -119,14 +119,14 @@ signed main(void) {
 		printf("%f\r\n\r\n", nnnnn);
 	#endif
 
-	LED_DATUPD_ON();
-	while (Query_Signal_Quality()) {
-		printf("Searching Signal...\r\n");
-		HAL_Delay(1000);
-	} LED_DATUPD_OFF(); printf("Signal Success.\r\n");
+//	LED_DATUPD_ON();
+//	while (Query_Signal_Quality()) {
+//		printf("Searching Signal...\r\n");
+//		HAL_Delay(1000);
+//	} LED_DATUPD_OFF(); printf("Signal Success.\r\n");
 
 	while (1) {
-		ONENET_LWM2M();
+		//ONENET_LWM2M();
 		//GPS_decode ();
 		//HTTP_Send_Data(NMEAdata.latitude, NMEAdata.longitude, NMEAdata.speed, 0);
 	}

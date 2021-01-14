@@ -1,7 +1,5 @@
-Core/Src/SIM7020Commander/General_Command.o: \
- ../Core/Src/SIM7020Commander/General_Command.c \
- ../Core/Inc/SIM7020Commander/General_Command.h \
- ../Core/Inc/SIM7020Commander/utility_basic.h ../Core/Inc/main.h \
+Core/Src/MQTT/utility.o: ../Core/Src/MQTT/utility.c \
+ ../Core/Inc/MQTT/utility.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -29,12 +27,9 @@ Core/Src/SIM7020Commander/General_Command.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/SIM7020Commander/AT.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
-../Core/Inc/SIM7020Commander/General_Command.h:
-
-../Core/Inc/SIM7020Commander/utility_basic.h:
+../Core/Inc/MQTT/utility.h:
 
 ../Core/Inc/main.h:
 
@@ -93,5 +88,3 @@ Core/Src/SIM7020Commander/General_Command.o: \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-
-../Core/Inc/SIM7020Commander/AT.h:

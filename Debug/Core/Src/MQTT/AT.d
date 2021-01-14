@@ -1,9 +1,5 @@
-Core/Src/SIM7020Commander/AT_Onenet_LWM2M.o: \
- ../Core/Src/SIM7020Commander/AT_Onenet_LWM2M.c \
- ../Core/Inc/SIM7020Commander/AT_Onenet_LWM2M.h \
- ../Core/Inc/SIM7020Commander/General_Command.h \
- ../Core/Inc/SIM7020Commander/utility_basic.h ../Core/Inc/main.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
+Core/Src/MQTT/AT.o: ../Core/Src/MQTT/AT.c ../Core/Inc/MQTT/AT.h \
+ ../Core/Inc/main.h ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h \
@@ -31,13 +27,9 @@ Core/Src/SIM7020Commander/AT_Onenet_LWM2M.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/SIM7020Commander/AT.h
+ ../Core/Inc/MQTT/utility.h
 
-../Core/Inc/SIM7020Commander/AT_Onenet_LWM2M.h:
-
-../Core/Inc/SIM7020Commander/General_Command.h:
-
-../Core/Inc/SIM7020Commander/utility_basic.h:
+../Core/Inc/MQTT/AT.h:
 
 ../Core/Inc/main.h:
 
@@ -97,4 +89,4 @@ Core/Src/SIM7020Commander/AT_Onenet_LWM2M.o: \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 
-../Core/Inc/SIM7020Commander/AT.h:
+../Core/Inc/MQTT/utility.h:
