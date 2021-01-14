@@ -1,0 +1,7 @@
+MQTT.c:21:5:CONNECT_Server	16	static
+MQTT.c:37:5:SUB_Topic	16	static
+MQTT.c:52:5:PUB_Messag	32	static
+MQTT.c:74:5:UNSUB_Topic	24	static
+MQTT.c:88:5:Close_Server	24	static
+MQTT.c:101:6:Messag_Analysis	152	static
+MQTT.c:118:5:Messag_Bispose	8	static
