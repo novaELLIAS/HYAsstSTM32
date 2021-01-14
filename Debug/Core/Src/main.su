@@ -1,5 +1,5 @@
 main.c:37:1:__io_putchar	16	static
-main.c:54:6:GPS_decode	40	static
+main.c:54:6:GPS_decode	8	static
 main.c:98:8:main	8	static
 main.c:144:6:SystemClock_Config	88	static
 main.c:181:13:MX_I2C1_Init	8	static

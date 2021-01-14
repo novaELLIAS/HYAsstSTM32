@@ -9,7 +9,7 @@
   */
 
 #define SerialDebug
-#define SerialGPSdebug
+//#define SerialGPSdebug
 //#define SerialDebugFloatTest
 
 #include "main.h"
@@ -80,7 +80,7 @@ void GPS_decode (void) {
 		DP.speed     = NMEAdata.speed;
 		DP.pdop      = NMEAdata.pdop;
 
-		#ifdef SerialDebug
+		#ifdef SerialGPSDebug
 			printf("\r\n** GPS Serial Debug **\r\n");
 			printf("GPS status: %s, PDOT: %f\r\n", NMEAmsg.gpssta^2? "3D":"2D", NMEAdata.pdop);
 			printf("UTC time: %02d:%02d:%02d\r\n", NMEAmsg.utc.hour, NMEAmsg.utc.min, NMEAmsg.utc.sec);
