@@ -3,8 +3,9 @@ typedef struct {
 	float latitude;
 	float longitude;
 	float speed;
+	float pdop;
 	int flag;
-} dataPoints;
+} __attribute__((packed)) dataPoints;
 
 int CONNECT_Server(void);
 

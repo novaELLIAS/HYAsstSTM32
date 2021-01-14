@@ -79,7 +79,7 @@ int AT_Return(char *str, int flag) {
 	memset(Buff, 0, sizeof Buff);
 	while(Time_count --) {
 		if (flag) HAL_UART_Receive(&huart6, (uint8_t *)Buff, sizeof Buff, 100);
-		printf("AT_Return: %s\r\n", Buff);
+		//printf("AT_Return: %s\r\n", Buff);
 		if(strstr((const char *)Buff,str)!=NULL) {return 0;}
 		HAL_Delay(1);
 	} return 1;

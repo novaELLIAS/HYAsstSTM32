@@ -28,7 +28,8 @@ Core/Src/MPU6050/Accident_Alert.o: ../Core/Src/MPU6050/Accident_Alert.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/MPU6050/Kalman.h ../Core/Inc/MPU6050/MPU6050.h \
- ../Core/Inc/GPS_Decoder/GPSdecode.h
+ ../Core/Inc/GPS_Decoder/GPSdecode.h \
+ ../Core/Inc/LED_Functions/LED_OUTPUT.h
 
 ../Core/Inc/main.h:
 
@@ -93,3 +94,5 @@ Core/Src/MPU6050/Accident_Alert.o: ../Core/Src/MPU6050/Accident_Alert.c \
 ../Core/Inc/MPU6050/MPU6050.h:
 
 ../Core/Inc/GPS_Decoder/GPSdecode.h:
+
+../Core/Inc/LED_Functions/LED_OUTPUT.h:

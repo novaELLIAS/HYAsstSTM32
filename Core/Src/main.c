@@ -78,6 +78,7 @@ void GPS_decode (void) {
 		DP.latitude  = NMEAdata.latitude;
 		DP.longitude = NMEAdata.longitude;
 		DP.speed     = NMEAdata.speed;
+		DP.pdop      = NMEAdata.pdop;
 
 		#ifdef SerialDebug
 			printf("\r\n** GPS Serial Debug **\r\n");
@@ -127,7 +128,7 @@ signed main(void) {
 	while (Query_Signal_Quality()) {
 		printf("Searching Signal...\r\n");
 		HAL_Delay(1000);
-	} LED_DATUPD_OFF(); printf("Signal Success.\r\n");
+	} printf("Signal Success.\r\n");
 
 	while (1) {
 		GPS_decode();

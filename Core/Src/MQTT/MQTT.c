@@ -3,6 +3,7 @@
 #include "MQTT/utility.h"
 #include "MQTT/general_command.h"
 #include "MQTT/at.h"
+#include "LED_Functions/LED_OUTPUT.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -84,12 +85,12 @@ int PUB_Messag(char *Messag) {
 	strcpy(tok.sendstr[3],"0");
 	strcpy(tok.sendstr[4],"0");
 	strcpy(tok.sendstr[5],Messag_len);
-	printf("Message_len: %send\r\n",Messag_len);
+	//printf("Message_len: %send\r\n",Messag_len);
 	strcpy(tok.sendstr[6],strToSend);
-	printf("Message_TEST1\r\n");
+	//printf("Message_TEST1\r\n");
 	strcpy(tok.ret,"OK");
 	ret = AT_CMD_Dispose(&tok);
-	printf("Message_TEST2\r\n");
+	//printf("Message_TEST2\r\n");
 	Buff_clear(&tok);
 	if(ret) printf("Message PUB Fail.\r\n");
 	else printf("Message PUB Success.\r\n");
@@ -161,14 +162,14 @@ int Messag_Bispose(void) {
 }
 
 void Messag_Builder (dataPoints *DP) {
-	sprintf(strToSend, "{\"La\":\"%.6f\",\"Lo\":\"%.6f\",\"S\":\"%.2f\",\"F\":\"%d\"}", DP->latitude, DP->longitude, DP->speed, DP->flag);
+	sprintf(strToSend, "{\"La\":\"%.6f\",\"Lo\":\"%.6f\",\"S\":\"%.2f\",\"A\":\"%.1f\",\"F\":\"%d\"}", DP->latitude, DP->longitude, DP->speed, DP->pdop, DP->flag);
 	int len = strlen(strToSend);
-	printf("Messag_Builder 1: %s\r\n", strToSend);
+	//printf("Messag_Builder 1: %s\r\n", strToSend);
 	strToHex(hexToSend, strToSend);
 	sprintf(strToSend, "\"03%04X", len);
 	strcat(strToSend, hexToSend);
 	strcat(strToSend, "\"");
-	printf("Messag_Builder 2: %s\r\n", strToSend);
+	//printf("Messag_Builder 2: %s\r\n", strToSend);
 }
 
 void ONENET_MQTT(dataPoints *DP) {
@@ -184,8 +185,10 @@ void ONENET_MQTT(dataPoints *DP) {
 			SIM7020_state = CONNECT_OK;
 			break;
 		case CONNECT_OK:
+			LED_DATUPD_ON();
 			HEX_Mode_Enable();
 			Messag_Builder(DP);
 			PUB_Messag(strToSend);
+			LED_DATUPD_OFF();
 	}
 }
