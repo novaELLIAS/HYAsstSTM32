@@ -9,7 +9,6 @@
 
 extern struct tok tok;
 extern char Buff[256];
-extern int SIM7020_state;
 
 char ClientID[20] = "\"653000696\"";
 char UserNAME[20] = "387253";

@@ -1,4 +1,6 @@
 
+extern int SIM7020_state;
+
 typedef struct {
 	float latitude;
 	float longitude;

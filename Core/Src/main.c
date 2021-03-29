@@ -51,7 +51,7 @@ nmea_msg           	   NMEAmsg;
 gps_data               NMEAdata;
 dataPoints             DP;
 
-void GPS_decode (void) {
+int GPS_decode (void) {
 
 	HAL_UART_Receive(&huart2, gps_uart, sizeof(gps_uart), GPS_Delay_Time);
 
@@ -66,6 +66,7 @@ void GPS_decode (void) {
 		#ifdef SerialDebug
 			printf("** GPS NO SIGNAL **\r\n");
 		#endif
+		return 1;
 	} else {
 		LED_GPSRFS_ON();
 		NMEA_GPRMC_Analysis (&NMEAmsg, (uint8_t*) gps_uart);
@@ -88,6 +89,7 @@ void GPS_decode (void) {
 		#endif
 
 		LED_GPSRFS_OFF();
+		return 0;
 	}
 }
 
@@ -124,16 +126,33 @@ signed main(void) {
 		printf("%f\r\n\r\n", nnnnn);
 	#endif
 
-	LED_DATUPD_ON();
+	register int ifGpsReady = 0;
+	//LED_DATUPD_ON(); LED_ALERT_ON();
+	LED_GPSRFS_ON(); LED_DATUPD_ON();
+
+	while (!ifGpsReady || (SIM7020_state^2)) {
+		if (!ifGpsReady && !Query_Signal_Quality()) {
+			ifGpsReady = 1; LED_GPSRFS_OFF();
+		} if (SIM7020_state^2) {
+			ONENET_MQTT(&DP); printf("SIM7020Searching..\r\n");
+		} else LED_DATUPD_OFF();
+		printf("GPS searching signal...\r\n"); HAL_Delay(1000);
+	}
+
+	/*
 	while (Query_Signal_Quality()) {
 		printf("Searching Signal...\r\n");
 		HAL_Delay(1000);
 	} printf("Signal Success.\r\n");
+	*/
 
+	LED_ALERT_OFF();
+
+	int GPSsta;
 	while (1) {
-		GPS_decode();
+		GPSsta = GPS_decode();
 		DP.flag = accidentJudge(&NMEAdata);
-		ONENET_MQTT(&DP);
+		if (!GPSsta) ONENET_MQTT(&DP);
 	}
 }
 
